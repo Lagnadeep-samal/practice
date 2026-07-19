@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="address" class="com.example.injection.Address">
+        <property name="city" value="Springfield" />
+        <property name="zipCode" value="12345" />
+    </bean>
+
+    <bean id="employeeConstructorDI" class="com.example.injection.EmployeeConstructorDI">
+        <constructor-arg name="name" value="Alice" />
+        <constructor-arg name="address" ref="address" />
+    </bean>
+
+    <bean id="employeeSetterDI" class="com.example.injection.EmployeeSetterDI">
+        <property name="name" value="Bob" />
+        <property name="address" ref="address" />
+    </bean>
+
+</beans>
