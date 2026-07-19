@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- The Engine bean: a plain, independent bean. -->
+    <bean id="engine" class="com.example.springcore.Engine">
+        <property name="type" value="V8" />
+        <property name="horsepower" value="450" />
+    </bean>
+
+    <!--
+        The Car bean DEPENDS ON the Engine bean.
+        - constructor-arg wires the "engine" bean into Car's constructor
+          (constructor injection).
+        - property wires a plain value into Car's setModel() method
+          (setter injection).
+    -->
+    <bean id="car" class="com.example.springcore.Car">
+        <constructor-arg ref="engine" />
+        <property name="model" value="Mustang GT" />
+    </bean>
+
+</beans>
