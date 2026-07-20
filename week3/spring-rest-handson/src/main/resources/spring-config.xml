@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- Step 2: Spring Core - Load Country from Spring Configuration XML -->
+
+    <!-- A single, default Country bean loaded straight from XML -->
+    <bean id="defaultCountry" class="com.handson.springresthandson.model.Country">
+        <property name="code" value="IN"/>
+        <property name="name" value="India"/>
+        <property name="capital" value="New Delhi"/>
+        <property name="population" value="1428600000"/>
+    </bean>
+
+    <!-- A list of Country beans, reused by the Step 4 REST country service
+         as its in-memory data source -->
+    <util:list id="countryList" list-class="java.util.ArrayList"
+               value-type="com.handson.springresthandson.model.Country">
+        <ref bean="defaultCountry"/>
+        <bean class="com.handson.springresthandson.model.Country">
+            <property name="code" value="US"/>
+            <property name="name" value="United States"/>
+            <property name="capital" value="Washington, D.C."/>
+            <property name="population" value="331900000"/>
+        </bean>
+        <bean class="com.handson.springresthandson.model.Country">
+            <property name="code" value="JP"/>
+            <property name="name" value="Japan"/>
+            <property name="capital" value="Tokyo"/>
+            <property name="population" value="125700000"/>
+        </bean>
+        <bean class="com.handson.springresthandson.model.Country">
+            <property name="code" value="FR"/>
+            <property name="name" value="France"/>
+            <property name="capital" value="Paris"/>
+            <property name="population" value="68000000"/>
+        </bean>
+    </util:list>
+
+</beans>
