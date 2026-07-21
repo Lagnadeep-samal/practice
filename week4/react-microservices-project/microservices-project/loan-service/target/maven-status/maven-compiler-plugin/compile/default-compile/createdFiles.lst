@@ -1,0 +1,5 @@
+com\example\loan\repository\LoanRepository.class
+com\example\loan\service\LoanService.class
+com\example\loan\LoanServiceApplication.class
+com\example\loan\model\Loan.class
+com\example\loan\controller\LoanController.class
