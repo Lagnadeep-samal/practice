@@ -1,0 +1,42 @@
+<div class="container">
+  <h1>Posts (JSONPlaceholder API Demo)</h1>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <!-- CREATE -->
+  <div class="add-post">
+    <input [(ngModel)]="newTitle" placeholder="Post title" />
+    <textarea [(ngModel)]="newBody" placeholder="Post body"></textarea>
+    <button (click)="addPost()">Add Post</button>
+  </div>
+
+  <div *ngIf="loading">Loading posts...</div>
+
+  <!-- READ / UPDATE / DELETE -->
+  <ul class="post-list" *ngIf="!loading">
+    <li *ngFor="let post of posts" class="post-item">
+
+      <ng-container *ngIf="editingId !== post.id; else editMode">
+        <h3>
+          {{ post.title }}
+          <span *ngIf="isLocallyCreated(post.id)" class="badge">locally added</span>
+        </h3>
+        <p>{{ post.body }}</p>
+        <div class="actions">
+          <button (click)="startEdit(post)">Edit</button>
+          <button (click)="deletePost(post.id)">Delete</button>
+        </div>
+      </ng-container>
+
+      <ng-template #editMode>
+        <input [(ngModel)]="editTitle" />
+        <textarea [(ngModel)]="editBody"></textarea>
+        <div class="actions">
+          <button (click)="saveEdit(post)">Save</button>
+          <button (click)="cancelEdit()">Cancel</button>
+        </div>
+      </ng-template>
+
+    </li>
+  </ul>
+</div>
