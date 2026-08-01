@@ -1,0 +1,93 @@
+name: CI/CD Pipeline
+
+# Runs on every push/PR to main, and lets you trigger it manually from the Actions tab
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel any in-progress run on the same branch when a new commit lands
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  # ---------------------------------------------------------------
+  # 1) TEST — install deps, run unit tests (Vitest, headless by default)
+  # ---------------------------------------------------------------
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test
+
+  # ---------------------------------------------------------------
+  # 2) BUILD — only runs if tests passed; produces the production bundle
+  # ---------------------------------------------------------------
+  build:
+    name: Build
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build for production
+        run: npm run build -- --configuration production
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  # ---------------------------------------------------------------
+  # 3) DEPLOY — packages the build for release.
+  #    No hosting target is wired up yet; this job just proves the
+  #    artifact is ready to ship. Swap the last step for a real
+  #    deploy (see README "Wiring up a real deploy") when you're ready.
+  # ---------------------------------------------------------------
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Confirm artifact is ready to deploy
+        run: |
+          echo "Build artifact ready for deployment:"
+          ls -R dist/
+          echo "Add a real deploy step here (GitHub Pages, Docker, Render, etc.) when ready."
